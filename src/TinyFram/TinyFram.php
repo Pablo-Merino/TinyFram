@@ -1,10 +1,8 @@
 <?php
 
-/*
-TinyFram
-by zad0xsis
-*/
-class TinyFram {
+namespace TinyFram;
+
+class Core {
 	
 		
 	private $appVersion;
