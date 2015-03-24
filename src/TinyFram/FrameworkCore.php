@@ -1,6 +1,7 @@
 <?php
 
 namespace TinyFram;
+use TinyFram\Exceptions;
 
 class FrameworkCore {
 
@@ -11,103 +12,95 @@ class FrameworkCore {
      * @access
      * @var
      */
-    private $appVersion;
+    private $app_version;
     /**
      * Sets the app name
      *
      * @access
      * @var
      */
-    private $appName;
-    /**
-     * Sets the ignore paths
-     *
-     * @access
-     * @var
-     */
-    private $ignorePaths;
-    /**
-     * Knows if an URL was successfully matched
-     *
-     * @access
-     * @var
-     */
-    private $urlMatched;
+    private $app_name;
+
+    private $route_array;
+    private $app_config;
+    private $catch_all;
 
     /**
      * @param $version
      * @param $name
      */
     public function __construct($version, $name) {
-       	$this->appVersion = $version;
-       	$this->appName = $name;
+       	$this->app_version = $version;
+       	$this->app_name = $name;
        	
     }
 
     /**
-     * Sets the path ignore
+     * Setter for catch_all
      *
-     * @param $paths
+     * @param mixed $catch_all New value for property
      *
-     * @throws Exception
      * @access
      * @return void
      */
-    public function pathIgnore($paths) {
-    	if(is_array($paths)) {
-    		$this->ignorePaths = $paths;
-    	} else {
-    		throw new Exception("The paths array is not an array!");
-    	}
+    public function setCatchAll($catch_all)
+    {
+        $this->catch_all = $catch_all;
     }
 
+
+
     /**
-     * Sets the default app layout name
+     * Sets app config
      *
-     * @param $layoutPath
+     * @param $config_array
      *
      * @access
      * @return void
      */
-    public function appConfig($layoutPath) {
+    public function appConfig($config_array) {
+        $this->app_config = array_merge(array(
+            "views" => "views/"
+        ), $config_array);
+    }
 
-    	define("APPLAYOUT", "$layoutPath");
-
+    public function route($route, $reference)
+    {
+        $this->route_array[] = array($route, $reference);
     }
 
     /**
      * Sets a route array to match
      *
-     * @param $routesArr
-     *
-     * @throws Exception
+     * @throws RoutingError
      * @access
      * @return void
      */
-    public function setRoutes($routesArr) {
-		$reqURI = $_SERVER['REQUEST_URI'];
-		$this->urlMatched = false;
+    public function dispatch() {
+        $request_uri = $_SERVER['REQUEST_URI'];
+		$matched_url = false;
 		
-		if(is_array($this->ignorePaths)) {
-			foreach ($this->ignorePaths as $key => $value) {
-				$reqURI = str_replace($value, '', $reqURI);
-			}
-		}
-		if(is_array($routesArr)) {
-			foreach($routesArr as $name=>$func) {
-				$reqURI = str_replace($this->appName."/", '', $reqURI);
+		if(is_array($this->route_array)) {
+			foreach($this->route_array as $name=>$func) {
+                $request_uri = str_replace($this->appName."/", '', $request_uri);
 				$urlR = str_replace('/', '\/', $name);
 				$urlR = '^' . $urlR . '\/?$';
-				if (preg_match("/$urlR/i", $reqURI, $rMatch)) {
-					$this->urlMatched = true;
+				if (preg_match("/$urlR/i", $request_uri, $rMatch)) {
+                    $matched_url = true;
 					$func($name);
 				} 
 			}
 		} else { 
-			throw new Exception("No route array");
+			throw new RoutingError("No route array");
 		}
-		if(!$this->urlMatched) {
-			notFound($reqURI);
+		if(!$matched_url) {
+			if(is_callable($this->catch_all))
+            {
+                $this->catch_all($request_uri);
+            } else {
+                throw new RoutingError("Couldn't match ".$request_uri);
+
+            }
 		}
 	}
 
