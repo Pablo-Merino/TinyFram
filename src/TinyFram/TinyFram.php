@@ -2,20 +2,57 @@
 
 namespace TinyFram;
 
-class Core {
-	
-		
-	private $appVersion;
-	private $appName;
-	private $appLayout;
-	private $ignorePaths;
-	private $urlMatched;
+class FrameworkCore {
 
-	public function __construct($version, $name) {
+
+    /**
+     * Sets the app version
+     *
+     * @access
+     * @var
+     */
+    private $appVersion;
+    /**
+     * Sets the app name
+     *
+     * @access
+     * @var
+     */
+    private $appName;
+    /**
+     * Sets the ignore paths
+     *
+     * @access
+     * @var
+     */
+    private $ignorePaths;
+    /**
+     * Knows if an URL was successfully matched
+     *
+     * @access
+     * @var
+     */
+    private $urlMatched;
+
+    /**
+     * @param $version
+     * @param $name
+     */
+    public function __construct($version, $name) {
        	$this->appVersion = $version;
        	$this->appName = $name;
        	
     }
+
+    /**
+     * Sets the path ignore
+     *
+     * @param $paths
+     *
+     * @throws Exception
+     * @access
+     * @return void
+     */
     public function pathIgnore($paths) {
     	if(is_array($paths)) {
     		$this->ignorePaths = $paths;
@@ -23,12 +60,31 @@ class Core {
     		throw new Exception("The paths array is not an array!");
     	}
     }
+
+    /**
+     * Sets the default app layout name
+     *
+     * @param $layoutPath
+     *
+     * @access
+     * @return void
+     */
     public function appConfig($layoutPath) {
 
     	define("APPLAYOUT", "$layoutPath");
 
     }
-	public function setRoutes($routesArr) {
+
+    /**
+     * Sets a route array to match
+     *
+     * @param $routesArr
+     *
+     * @throws Exception
+     * @access
+     * @return void
+     */
+    public function setRoutes($routesArr) {
 		$reqURI = $_SERVER['REQUEST_URI'];
 		$this->urlMatched = false;
 		
@@ -54,13 +110,38 @@ class Core {
 			notFound($reqURI);
 		}
 	}
-	public function getAppName() {
+
+    /**
+     * Gets the app name
+     *
+     *
+     * @access
+     * @return mixed
+     */
+    public function getAppName() {
 		return $this->appName;
 	}
-	public function getAppVer() {
+
+    /**
+     * Gets the app version
+     *
+     *
+     * @access
+     * @return mixed
+     */
+    public function getAppVer() {
 		return $this->appVer;
 	}
-	public function render($view) {
+
+    /**
+     * Method to render a template
+     *
+     * @param $view
+     *
+     * @access
+     * @return void
+     */
+    public function render($view) {
 		if(!file_exists(APPLAYOUT.$view.".php")) {
 			$content = "View file not found!";
 		} else {
