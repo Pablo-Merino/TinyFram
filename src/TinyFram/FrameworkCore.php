@@ -92,7 +92,11 @@ class FrameworkCore {
             // check if the current request matches the expression
             if (preg_match($pattern, $request_url, $matches)) {
                 array_shift($matches);
-                return $func($matches);
+                if(is_callable($func))
+                {
+                    echo $func($matches);
+                }
+
             }
         }
         if(is_callable($this->catch_all))
@@ -102,28 +106,6 @@ class FrameworkCore {
             throw new \Exception("Couldn't match ".$request_url);
         }
     }
-
-    /**
-     * Gets the app name
-     *
-     *
-     * @access
-     * @return mixed
-     */
-    public function getAppName() {
-		return $this->appName;
-	}
-
-    /**
-     * Gets the app version
-     *
-     *
-     * @access
-     * @return mixed
-     */
-    public function getAppVer() {
-		return $this->appVer;
-	}
 
     /**
      * Method to render a template
