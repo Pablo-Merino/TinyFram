@@ -22,14 +22,21 @@ class FrameworkCore {
     private $app_config = array(
         "views" => "views/"
     );
+
     /**
-     * Specifies a catch_all function
+     * Specifies a error_handler function
      *
      * @access
      * @var
      */
-    private $catch_all;
+    private $error_handler;
 
+    /**
+     * Stores the Mustache rendering engine
+     *
+     * @access
+     * @var \Mustache_Engine
+     */
     private $mustache;
 
     /**
@@ -45,16 +52,16 @@ class FrameworkCore {
     }
 
     /**
-     * Setter for catch_all
+     * Setter for error_handler
      *
-     * @param mixed $catch_all New value for property
+     * @param mixed $error_handler New value for property
      *
      * @access
      * @return void
      */
-    public function setCatchAll($catch_all)
+    public function setErrorHandler($error_handler)
     {
-        $this->catch_all = $catch_all;
+        $this->error_handler = $error_handler;
     }
 
     /**
@@ -84,7 +91,7 @@ class FrameworkCore {
         foreach($this->route_array as $route) {
             $request_url = array_key_exists('PATH_INFO', $_SERVER) ? $_SERVER['PATH_INFO'] : $_SERVER['REQUEST_URI'];
             $name = $route[0];
-            $func = $route[1];
+            $callable = $route[1];
             $pattern = "@^" . preg_replace(
                     '/\\\:[a-zA-Z0-9\_\-]+/', '([a-zA-Z0-9\-\_]+)', preg_quote($name)
                 ) . "$@D";
@@ -92,16 +99,44 @@ class FrameworkCore {
             // check if the current request matches the expression
             if (preg_match($pattern, $request_url, $matches)) {
                 array_shift($matches);
-                if(is_callable($func))
+                if(is_callable($callable))
                 {
-                    echo $func($matches);
-                }
+                    /**
+                     * Trickery here: this instantiates the class specified in the router, with the $app and $request
+                     * arguments, and then calls the function also specified in the router with the $matches variable
+                     */
+                    echo call_user_func_array(
+                        array(
+                            new $callable[0]($this, $_SERVER), /** This is the class name instantiation */
+                            $callable[1] /** This is the method name */
+                        ),
+                        array($matches) /** This contains the matches from the router */
+                    );
+                    return;
+                } else {
+                    if(is_callable($this->error_handler))
+                    {
+                        return $this->error_handler->__invoke(
+                            array(
+                                "error_code" => 500,
+                                "error_message" => "Couldn't call the specified <pre>callable</pre>"
+                            )
+                        );
+                    } else {
+                        throw new \Exception("Couldn't call the specified <pre>callable</pre>");
+                    }
 
+                }
             }
         }
-        if(is_callable($this->catch_all))
+        if(is_callable($this->error_handler))
         {
-            return $this->catch_all->__invoke($request_url);
+            return $this->error_handler->__invoke(
+                array(
+                    "error_code" => 404,
+                    "error_message" => "Couldn't match ".$request_url
+                )
+            );
         } else {
             throw new \Exception("Couldn't match ".$request_url);
         }
@@ -114,7 +149,7 @@ class FrameworkCore {
      *
      * @throws \Exception
      * @access
-     * @return void
+     * @return string
      */
     public function render($view) {
 		if(!file_exists($this->app_config["views"].$view.".mustache")) {
