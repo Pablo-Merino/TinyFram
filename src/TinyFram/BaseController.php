@@ -6,8 +6,8 @@
  * PHP version 5.5
  *
  * @category  tinyfram-skeleton
- * @package   
- * @author    pmerino <desarrollo@hola-internet.com>
+ * @package
+ * @author     Pablo Merino <pablo.perso1995@gmail.com>
  * @copyright 2015
  * @license   Apache 2 License http://www.apache.org/licenses/LICENSE-2.0.html
  * @version   GIT: $Id$
@@ -22,11 +22,11 @@ namespace TinyFram;
  * @category   Hola-frontend
  * @package TinyFram
  * @subpackage BaseController
- * @author     Development <desarrollo@hola-internet.com>
- * @copyright  2013 Hola.com
+ * @author     Pablo Merino <pablo.perso1995@gmail.com>
+ * @copyright  2015 pablo.xyz
  * @license    Apache 2 License http://www.apache.org/licenses/LICENSE-2.0.html
  * @version    Release: <0.1.0>
- * @link       http://www.hola.com
+ * @link       http://pablo.xyz
  * @since      Class available since Release 0.1.0
  */
 class BaseController {
