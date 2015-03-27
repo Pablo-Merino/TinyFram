@@ -7,11 +7,7 @@
  *
  * @category  tinyfram-skeleton
  * @package
-<<<<<<< HEAD
- * @author     pmerino <pablo.perso1995@gmail.com>
-=======
  * @author     Pablo Merino <pablo.perso1995@gmail.com>
->>>>>>> e6119d9... Added a base model, and ability to hook up databases (using PDO)
  * @copyright 2015
  * @license   Apache 2 License http://www.apache.org/licenses/LICENSE-2.0.html
  * @version   GIT: $Id$
@@ -25,11 +21,8 @@ namespace TinyFram;
  *
  * @package TinyFram
  * @subpackage BaseController
-<<<<<<< HEAD
- * @author     pmerino <pablo.perso1995@gmail.com>
-=======
  * @author     Pablo Merino <pablo.perso1995@gmail.com>
->>>>>>> e6119d9... Added a base model, and ability to hook up databases (using PDO)
+ * @author     Pablo Merino <pablo.perso1995@gmail.com>
  * @copyright  2015 pablo.xyz
  * @license    Apache 2 License http://www.apache.org/licenses/LICENSE-2.0.html
  * @version    Release: <0.1.0>
