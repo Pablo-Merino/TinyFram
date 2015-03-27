@@ -19,7 +19,6 @@ namespace TinyFram;
 /**
  * Class BaseController
  *
- * @category   Hola-frontend
  * @package TinyFram
  * @subpackage BaseController
  * @author     Pablo Merino <pablo.perso1995@gmail.com>

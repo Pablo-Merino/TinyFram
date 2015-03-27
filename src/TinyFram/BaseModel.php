@@ -6,8 +6,13 @@
  * PHP version 5.5
  *
  * @category  tinyfram-skeleton
+<<<<<<< HEAD
  * @package   
  * @author    pmerino <desarrollo@hola-internet.com>
+=======
+ * @package
+ * @author     pmerino <pablo.perso1995@gmail.com>
+>>>>>>> 8c01810b1771822e93be1257fa5585195ca750d6
  * @copyright 2015
  * @license   Apache 2 License http://www.apache.org/licenses/LICENSE-2.0.html
  * @version   GIT: $Id$
@@ -19,14 +24,13 @@ namespace TinyFram;
 /**
  * Class BaseModel
  *
- * @category   Hola-frontend
  * @package TinyFram
  * @subpackage BaseModel
- * @author     Development <desarrollo@hola-internet.com>
- * @copyright  2013 Hola.com
+ * @author     pmerino <pablo.perso1995@gmail.com>
+ * @copyright  2015 pablo.xyz
  * @license    Apache 2 License http://www.apache.org/licenses/LICENSE-2.0.html
  * @version    Release: <0.1.0>
- * @link       http://www.hola.com
+ * @link       http://pablo.xyz
  * @since      Class available since Release 0.1.0
  */
 class BaseModel {
