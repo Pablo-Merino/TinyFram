@@ -9,7 +9,9 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
+    "require": {
+      "mustache/mustache": "*"
+    },
     "autoload": {
         "psr-0": {
             "TinyFram": "src/"

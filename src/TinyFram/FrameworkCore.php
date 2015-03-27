@@ -2,22 +2,9 @@
 
 namespace TinyFram;
 
-class FrameworkCore {
+require __DIR__."/../../vendor/autoload.php";
 
-    /**
-     * Sets the app version
-     *
-     * @access
-     * @var
-     */
-    private $app_version;
-    /**
-     * Sets the app name
-     *
-     * @access
-     * @var
-     */
-    private $app_name;
+class FrameworkCore {
 
     /**
      * Stores the route => function array
@@ -43,14 +30,18 @@ class FrameworkCore {
      */
     private $catch_all;
 
+    private $mustache;
+
     /**
      * @param $version
      * @param $name
      */
-    public function __construct($version, $name) {
-       	$this->app_version = $version;
-       	$this->app_name = $name;
-       	
+    public function __construct($app_options) {
+        $this->app_config = array_merge($this->app_config, $app_options);
+
+        $this->mustache = new \Mustache_Engine(array(
+            'loader' => new \Mustache_Loader_FilesystemLoader($this->app_config["views"]),
+        ));
     }
 
     /**
@@ -64,20 +55,6 @@ class FrameworkCore {
     public function setCatchAll($catch_all)
     {
         $this->catch_all = $catch_all;
-    }
-
-
-
-    /**
-     * Sets app config
-     *
-     * @param $config_array
-     *
-     * @access
-     * @return void
-     */
-    public function appConfig($config_array) {
-        $this->app_config = array_merge($this->app_config, $config_array);
     }
 
     /**
@@ -153,16 +130,15 @@ class FrameworkCore {
      *
      * @param $view
      *
+     * @throws \Exception
      * @access
      * @return void
      */
     public function render($view) {
-		if(!file_exists($this->app_config["views"].$view.".php")) {
-            throw new \Exception("View file ".$this->app_config["views"].$view.".php not found");
+		if(!file_exists($this->app_config["views"].$view.".mustache")) {
+            throw new \Exception("View file ".$this->app_config["views"].$view.".mustache not found");
 		} else {
-			$content = file_get_contents($this->app_config["views"].$view.".php")."\n";
-
+            return $this->mustache->render("layout", array("yield" => $this->mustache->render($view)));
 		}
-		require $this->app_config["views"]."layout.php";
 	}
 }
