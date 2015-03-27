@@ -18,7 +18,6 @@
 /**
  * Class RoutingError
  *
- * @category   Hola-frontend
  * @subpackage RoutingError
  * @author     pmerino <pablo.perso1995@gmail.com>
  * @copyright  2015 pablo.xyz
