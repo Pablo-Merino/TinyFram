@@ -68,6 +68,13 @@ class FrameworkCore {
      */
     private static $self_instance;
 
+    /**
+     * Used to reload the config of the mustache rendered for example when the config changes
+     *
+     *
+     * @access
+     * @return void
+     */
     public function reloadMustacheAfterConfigChange()
     {
         $this->mustache = new \Mustache_Engine(array(
@@ -186,12 +193,13 @@ class FrameworkCore {
                     }
                     return;
                 } else {
+                    http_response_code(500);
                     if(is_callable($this->error_handler))
                     {
-                        return $this->error_handler->__invoke(
+                        echo $this->error_handler->__invoke(
                             array(
                                 "error_code" => 500,
-                                "error_message" => "Couldn't call the specified <pre>callable</pre>"
+                                "error_message" => "Couldn't call the specified callable"
                             )
                         );
                     } else {
@@ -201,9 +209,10 @@ class FrameworkCore {
                 }
             }
         }
+        http_response_code(404);
         if(is_callable($this->error_handler))
         {
-            return $this->error_handler->__invoke(
+            echo $this->error_handler->__invoke(
                 array(
                     "error_code" => 404,
                     "error_message" => "Couldn't match ".$request_url
@@ -215,19 +224,20 @@ class FrameworkCore {
     }
 
     /**
-     * Method to render a template
+     * Renders a mustache views & template with the specified context
      *
-     * @param $view
+     * @param      $view
+     * @param null $variables
      *
      * @throws \Exception
      * @access
      * @return string
      */
-    public function render($view) {
+    public function render($view, $variables = null) {
 		if(!file_exists($this->app_config["views"].$view.".mustache")) {
             throw new \Exception("View file ".$this->app_config["views"].$view.".mustache not found");
 		} else {
-            return $this->mustache->render("layout", array("yield" => $this->mustache->render($view)));
+            return $this->mustache->render("layout", array("yield" => $this->mustache->render($view, $variables)));
 		}
 	}
 }
