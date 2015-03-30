@@ -55,8 +55,43 @@ class Controller {
         $this->request = $request;
     }
 
+    /**
+     * Renders a template
+     *
+     * @param      $temp
+     * @param null $variable
+     *
+     * @access
+     * @return mixed
+     */
     protected function renderTemplate($temp, $variable = null)
     {
         return $this->app->render($temp, $variable);
+    }
+
+    /**
+     * Implements basic HTTP auth
+     *
+     * @param array  $auth_array
+     * @param string $error_msg
+     * @param string $realm
+     *
+     * @access
+     * @return void
+     */
+    protected function httpBasicAuth($auth_array, $error_msg = "Unauthorized", $realm = "Password protected")
+    {
+        $valid_users = array_keys($auth_array);
+
+        $user = $_SERVER['PHP_AUTH_USER'];
+        $pass = $_SERVER['PHP_AUTH_PW'];
+
+        $validated = (in_array($user, $valid_users)) && ($pass == $auth_array[$user]);
+
+        if (!$validated) {
+            header("WWW-Authenticate: Basic realm=\"$realm\"");
+            header("HTTP/1.0 401 Unauthorized");
+            die($error_msg);
+        }
     }
 }
