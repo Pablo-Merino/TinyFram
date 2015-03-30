@@ -14,7 +14,7 @@
  * @link      
  * @since     File available since Release 0.1.0
  */ 
-namespace TinyFram;
+namespace TinyFram\Base;
 
 /**
  * Class BaseController
@@ -28,7 +28,7 @@ namespace TinyFram;
  * @link       http://pablo.xyz
  * @since      Class available since Release 0.1.0
  */
-class BaseController {
+class Controller {
 
     /**
      * The app instance, so we can access methods such as `render'
@@ -55,8 +55,8 @@ class BaseController {
         $this->request = $request;
     }
 
-    protected function renderTemplate($temp)
+    protected function renderTemplate($temp, $variable = null)
     {
-        return $this->app->render($temp);
+        return $this->app->render($temp, $variable);
     }
 }
