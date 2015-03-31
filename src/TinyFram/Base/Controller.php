@@ -59,6 +59,7 @@ class Controller {
      */
     public function __construct($app, $request)
     {
+        session_start();
         $this->app = $app;
         $this->request = $request;
 
@@ -103,5 +104,23 @@ class Controller {
             header("HTTP/1.0 401 Unauthorized");
             die($error_msg);
         }
+    }
+
+    protected function setSessionItem($key, $value)
+    {
+        $this->checkSession();
+        $_SESSION[$key] = $value;
+    }
+
+    protected function getSessionItem($key)
+    {
+        $this->checkSession();
+        return $_SESSION[$key];
+    }
+
+    private function checkSession()
+    {
+        if (session_status() == PHP_SESSION_NONE)
+            session_start();
     }
 }
