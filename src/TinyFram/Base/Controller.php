@@ -46,6 +46,14 @@ class Controller {
     protected $request;
 
     /**
+     * Variable that contains both $_GET and $_POST (where applicable)
+     *
+     * @access
+     * @var array
+     */
+    protected $params;
+
+    /**
      * @param $app
      * @param $request
      */
@@ -53,6 +61,8 @@ class Controller {
     {
         $this->app = $app;
         $this->request = $request;
+
+        $this->params = array_merge($_GET, $_POST);
     }
 
     /**

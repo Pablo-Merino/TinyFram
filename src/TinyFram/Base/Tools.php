@@ -14,7 +14,7 @@
  * @link      
  * @since     File available since Release 0.1.0
  */ 
-namespace TinyFram;
+namespace TinyFram\Base;
 
 /**
  * Class Tools
@@ -28,7 +28,7 @@ namespace TinyFram;
  * @link       http://pablo.xyz
  * @since      Class available since Release 0.1.0
  */
-class Tools {
+trait Tools {
     /**
      * Helper method to pluralize words
      *

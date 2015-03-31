@@ -15,7 +15,6 @@
  * @since     File available since Release 0.1.0
  */ 
 namespace TinyFram\Base;
-
 /**
  * Class BaseModel
  *
@@ -29,7 +28,7 @@ namespace TinyFram\Base;
  * @since      Class available since Release 0.1.0
  */
 class Model {
-
+    use Tools;
     /**
      * PHP's PDO database library
      *
@@ -62,7 +61,7 @@ class Model {
     public function __construct($default_values = array())
     {
         $db_config = \TinyFram\FrameworkCore::getInstance()->app_config["db"];
-        $this->table = \TinyFram\Tools::pluralize(strtolower(\TinyFram\Tools::get_actual_class($this)));
+        $this->table = Tools::pluralize(strtolower(Tools::get_actual_class($this)));
         $this->pdo = new \PDO(
             "mysql:host=".$db_config["host"].";dbname=".$db_config["dbname"],
             $db_config["username"],

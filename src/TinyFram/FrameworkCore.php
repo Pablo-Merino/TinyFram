@@ -171,9 +171,12 @@ class FrameworkCore {
                     '/\\\:[a-zA-Z0-9\_\-]+/', '([a-zA-Z0-9\-\_]+)', preg_quote($name)
                 ) . "$@D";
             $matches = array();
-            // check if the current request matches the expression
+
             if (preg_match($pattern, $request_url, $matches) && $request_method == $method) {
                 array_shift($matches);
+
+                $matches = $this->generateNamedRoutesMatches($matches, $name);
+
                 if(is_callable($callable))
                 {
                     /**
@@ -184,7 +187,7 @@ class FrameworkCore {
                         echo call_user_func_array(
                             array(
                                 new $callable[0]($this, $_SERVER), /** This is the class name instantiation */
-                                $callable[1]/** This is the method name */
+                                $callable[1] /** This is the method name */
                             ),
                             array($matches)
                         );
@@ -240,4 +243,28 @@ class FrameworkCore {
             return $this->mustache->render("layout", array("yield" => $this->mustache->render($view, $variables)));
 		}
 	}
+
+    /**
+     * Trickery to generate a key => value hash containing the named routes and their matched values
+     *
+     * @param $matches
+     * @param $name
+     *
+     * @access
+     * @return array
+     */
+    private function generateNamedRoutesMatches($matches, $name)
+    {
+        $route_matches = array();
+
+        preg_match_all('/:([a-zA-Z0-9\_\-])+/', $name, $route_matches);
+
+        array_pop($route_matches);
+
+        $route_matches = array_map(function($a) {
+            return str_replace(":", "", $a);
+        }, $route_matches[0]);
+
+        return array_combine($route_matches, $matches);
+    }
 }
