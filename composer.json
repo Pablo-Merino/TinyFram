@@ -10,7 +10,8 @@
     ],
     "minimum-stability": "dev",
     "require": {
-      "mustache/mustache": "*"
+      "mustache/mustache": "*",
+      "php": ">= 5.5"
     },
     "autoload": {
         "psr-0": {
